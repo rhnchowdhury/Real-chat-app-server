@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,6 +23,18 @@ async function run() {
             const users = req.body;
             const result = await userCollection.insertOne(users);
             res.send(result);
+        });
+
+        // jwt create
+        app.get('/jwt', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            if (user) {
+                const token = jwt.sign({ email }, process.env.ACCESS_TOKEN);
+                return res.send({ accessToken: 'token' })
+            }
+            return res.status(403).send({ accessToken: 'token' })
         })
     }
     finally {
