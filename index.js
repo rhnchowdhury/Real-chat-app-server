@@ -15,7 +15,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        const fitnessCollection = client.db('realChat').collection('users');
+        const userCollection = client.db('realChat').collection('users');
+
+        // users save into mongodb
+        app.post('/users', async (req, res) => {
+            const users = req.body;
+            const result = await userCollection.insertOne(users);
+            res.send(result);
+        })
     }
     finally {
 
