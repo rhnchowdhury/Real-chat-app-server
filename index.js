@@ -41,6 +41,13 @@ async function run() {
             res.send(result);
         });
 
+        // get users from mongodb
+        app.get('/users', async (req, res) => {
+            const query = {};
+            const result = await userCollection.find(query).toArray();
+            res.send(result);
+        })
+
         // jwt create
         app.get('/jwt', async (req, res) => {
             const email = req.query.email;
